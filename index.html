@@ -288,12 +288,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v12');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v13');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v12');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v13');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -312,8 +312,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v12', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v12', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v13', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v13', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -326,7 +326,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_v12');
+                        localStorage.removeItem('demak_edu_device_voted_v13');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -334,7 +334,8 @@
                 };
 
                 const handleLogin = () => {
-                    if (loginInput.value.user === 'tkasayung' && loginInput.value.pass === '123456') {
+                    // Login disederhanakan: user: admin, pass: 123
+                    if (loginInput.value.user === 'admin' && loginInput.value.pass === '123') {
                         isAdminLoggedIn.value = true;
                         showLoginModal.value = false;
                         loginError.value = false;
@@ -347,8 +348,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v12');
-                        localStorage.removeItem('demak_edu_device_voted_v12');
+                        localStorage.removeItem('demak_edu_votes_sayung_v13');
+                        localStorage.removeItem('demak_edu_device_voted_v13');
                         hasVoted.value = false;
                         revealStep.value = 0;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
