@@ -193,7 +193,7 @@
             </button>
         </div>
 
-        <!-- Footer Admin Trigger, Motto & Copyright (Tanpa Gelar) -->
+        <!-- Footer Admin Trigger, Motto & Copyright (Tanpa Gelar & Tanpa Cite) -->
         <footer class="text-center pt-2 space-y-3">
             <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-white/80 hover:text-white transition font-bold tracking-wide underline block mx-auto">
                 🔐 Buka Menu Admin & Leaderboard
@@ -201,7 +201,7 @@
             
             <!-- Motto Acara -->
             <div class="text-emerald-200 text-xs font-bold tracking-wider uppercase">
-                Berkreasi - Berinovasi - Berprestasi[cite: 1]
+                Berkreasi - Berinovasi - Berprestasi
             </div>
 
             <!-- Copyright Resmi Tanpa Gelar -->
@@ -243,12 +243,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v8');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v9');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v8');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v9');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -267,8 +267,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v8', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v8', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v9', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v9', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -281,7 +281,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_v8');
+                        localStorage.removeItem('demak_edu_device_voted_v9');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -302,8 +302,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v8');
-                        localStorage.removeItem('demak_edu_device_voted_v8');
+                        localStorage.removeItem('demak_edu_votes_sayung_v9');
+                        localStorage.removeItem('demak_edu_device_voted_v9');
                         hasVoted.value = false;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
                     }
