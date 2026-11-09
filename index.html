@@ -36,13 +36,13 @@
             <p class="text-xs text-slate-600 mt-1 font-semibold">Bimtek TKA Kelas Sayung • Penilaian Guru Mranggen</p>
         </header>
 
-        <!-- Form Voting Modern & Cerah -->
+        <!-- Form Voting Modern & Santai -->
         <div v-if="!isAdminLoggedIn && !hasVoted" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-emerald-200 space-y-5">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
                 <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-emerald-600/30">🗳️</div>
                 <div>
-                    <h2 class="text-base font-bold text-slate-900">Form Penilaian Resmi</h2>
-                    <p class="text-xs text-slate-500">Masukkan nama dan pilih kelompok terbaik</p>
+                    <h2 class="text-base font-bold text-slate-900">Pilih Kelompok Favoritmu di Sini</h2>
+                    <p class="text-xs text-slate-500">Masukkan nama dan berikan suara terbaikmu</p>
                 </div>
             </div>
 
@@ -288,12 +288,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v13');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v14');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v13');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v14');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -312,8 +312,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v13', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v13', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v14', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v14', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -326,7 +326,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_v13');
+                        localStorage.removeItem('demak_edu_device_voted_v14');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -334,7 +334,7 @@
                 };
 
                 const handleLogin = () => {
-                    // Login disederhanakan: user: admin, pass: 123
+                    // Login admin / 123
                     if (loginInput.value.user === 'admin' && loginInput.value.pass === '123') {
                         isAdminLoggedIn.value = true;
                         showLoginModal.value = false;
@@ -348,8 +348,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v13');
-                        localStorage.removeItem('demak_edu_device_voted_v13');
+                        localStorage.removeItem('demak_edu_votes_sayung_v14');
+                        localStorage.removeItem('demak_edu_device_voted_v14');
                         hasVoted.value = false;
                         revealStep.value = 0;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
