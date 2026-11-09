@@ -80,13 +80,34 @@
             </form>
         </div>
 
-        <!-- Success State -->
+        <!-- Success State & Tombol Mau Milih Lagi -->
         <div v-if="hasVoted && !isAdminLoggedIn" class="bright-card rounded-3xl p-8 text-center shadow-2xl space-y-4 border-2 border-emerald-200">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
                 ✓
             </div>
             <h2 class="text-xl font-extrabold text-slate-900">Terima Kasih, Guru Hebat!</h2>
             <p class="text-sm text-slate-600 leading-relaxed">Pilihan Anda untuk Kategori Kelompok Paling Inovatif telah berhasil terekam. Perangkat ini telah mencatat suara sah Anda.</p>
+            
+            <button @click="promptRevote" class="text-xs text-emerald-700 font-bold underline hover:text-emerald-900 pt-2 block mx-auto">
+                Ingin Mengubah Pilihan Polling?
+            </button>
+        </div>
+
+        <!-- Pop-Up Konfirmasi Revote Custom -->
+        <div v-if="showRevoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div class="bright-card rounded-3xl p-6 max-w-sm w-full shadow-2xl border-2 border-amber-400 space-y-4 text-center">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">⚠️</div>
+                <h3 class="text-base font-extrabold text-slate-900">Konfirmasi Polling</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">Kan tadi kamu sudah memberikan polling, yakin mau milih lagi?</p>
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button @click="confirmRevote('no')" class="py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">
+                        Gak jadi deh
+                    </button>
+                    <button @click="confirmRevote('yes')" class="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition">
+                        Iya dong
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Login Modal Admin -->
@@ -172,7 +193,7 @@
             </button>
         </div>
 
-        <!-- Footer Admin Trigger, Motto & Copyright -->
+        <!-- Footer Admin Trigger, Motto & Copyright (Tanpa Gelar) -->
         <footer class="text-center pt-2 space-y-3">
             <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-white/80 hover:text-white transition font-bold tracking-wide underline block mx-auto">
                 🔐 Buka Menu Admin & Leaderboard
@@ -183,9 +204,9 @@
                 Berkreasi - Berinovasi - Berprestasi[cite: 1]
             </div>
 
-            <!-- Copyright Resmi -->
+            <!-- Copyright Resmi Tanpa Gelar -->
             <div class="text-emerald-300/80 text-[11px] font-medium pt-1">
-                Created by Muhammad Imam Suwiji, S.Pd.SD., M.Pd. Copyright &copy; 2026
+                Created by Muhammad Imam Suwiji. Copyright &copy; 2026
             </div>
         </footer>
 
@@ -201,6 +222,7 @@
                 const voterName = ref('');
                 const selectedGroup = ref(null);
                 const hasVoted = ref(false);
+                const showRevoteModal = ref(false);
                 const isAdminLoggedIn = ref(false);
                 const showLoginModal = ref(false);
                 const loginError = ref(false);
@@ -221,12 +243,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v6');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v7');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v6');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v7');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -245,9 +267,24 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v6', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v6', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v7', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v7', 'true');
                         hasVoted.value = true;
+                    }
+                };
+
+                const promptRevote = () => {
+                    showRevoteModal.value = true;
+                };
+
+                const confirmRevote = (choice) => {
+                    if (choice === 'yes') {
+                        hasVoted.value = false;
+                        selectedGroup.value = null;
+                        localStorage.removeItem('demak_edu_device_voted_v7');
+                        showRevoteModal.value = false;
+                    } else {
+                        showRevoteModal.value = false;
                     }
                 };
 
@@ -265,8 +302,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v6');
-                        localStorage.removeItem('demak_edu_device_voted_v6');
+                        localStorage.removeItem('demak_edu_votes_sayung_v7');
+                        localStorage.removeItem('demak_edu_device_voted_v7');
                         hasVoted.value = false;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
                     }
@@ -290,6 +327,7 @@
                     voterName,
                     selectedGroup,
                     hasVoted,
+                    showRevoteModal,
                     isAdminLoggedIn,
                     showLoginModal,
                     loginError,
@@ -298,6 +336,8 @@
                     sortedGroups,
                     defaultPlaceholder,
                     submitVote,
+                    promptRevote,
+                    confirmRevote,
                     handleLogin,
                     resetVotes,
                     clearPlaceholder,
