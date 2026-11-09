@@ -13,6 +13,11 @@
         .bright-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); }
         .hero-glow { box-shadow: 0 0 50px rgba(52, 211, 153, 0.4); }
         .logo-ring { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col justify-between py-8 px-4">
@@ -130,60 +135,91 @@
             </form>
         </div>
 
-        <!-- Admin Panel (Logged In) dengan Medali & Warna Cerah -->
+        <!-- Admin Panel (Logged In) dengan Pengumuman Bertahap (3 ➔ 2 ➔ 1) & Efek Suara -->
         <div v-if="isAdminLoggedIn" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-emerald-300 space-y-6">
             <div class="flex justify-between items-center border-b border-slate-200 pb-4">
-                <h2 class="text-base font-extrabold text-emerald-900">👑 Panel Admin & Leaderboard</h2>
+                <h2 class="text-base font-extrabold text-emerald-900">👑 Panel Admin & Panggung LCD</h2>
                 <button @click="isAdminLoggedIn = false" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-xl font-bold border border-rose-200">Logout</button>
             </div>
 
-            <div>
-                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3">🏆 Peringkat 3 Besar Teratas</h3>
-                <div class="space-y-3">
-                    <!-- Juara 1 (Medali Emas) -->
-                    <div class="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-200 border-2 border-yellow-400 shadow-md">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-sm font-black shadow">🥇</span>
-                            <div>
-                                <span class="text-xs font-extrabold text-amber-800 uppercase block">Juara 1</span>
-                                <span class="text-sm font-extrabold text-slate-900">{{ sortedGroups[0]?.name }}</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-black bg-amber-500 text-white px-3 py-1.5 rounded-full shadow">{{ sortedGroups[0]?.votes }} Suara</span>
-                    </div>
+            <!-- Kontrol Panggung Dramatis Bertahap -->
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-white shadow-xl space-y-3 text-center">
+                <h3 class="text-xs font-extrabold uppercase tracking-widest text-amber-100">🎬 Kontrol Pengumuman Pemenang</h3>
+                <p class="text-xs font-medium">Buka hasil juara satu persatu secara dramatis di layar LCD!</p>
+                
+                <div class="grid grid-cols-3 gap-2 pt-1">
+                    <button @click="revealStep = 1; playSound();" 
+                        class="py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-black rounded-xl text-xs shadow-lg transition border border-amber-400/40">
+                        🥉 Juara 3
+                    </button>
+                    <button @click="revealStep = 2; playSound();" 
+                        class="py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-black rounded-xl text-xs shadow-lg transition border border-amber-400/40">
+                        🥈 Juara 2
+                    </button>
+                    <button @click="revealStep = 3; playSound();" 
+                        class="py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-black rounded-xl text-xs shadow-lg transition border border-amber-400/40">
+                        🥇 Juara 1
+                    </button>
+                </div>
+                <button @click="revealStep = 0" class="text-[11px] text-amber-100 underline hover:text-white pt-1 block mx-auto font-semibold">
+                    🔄 Tutup Kembali Semua Hasil
+                </button>
+            </div>
 
-                    <!-- Juara 2 (Medali Perak) -->
-                    <div class="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-slate-100 via-gray-100 to-slate-200 border-2 border-slate-300 shadow-md">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-xl bg-slate-400 text-white flex items-center justify-center text-sm font-black shadow">🥈</span>
-                            <div>
-                                <span class="text-xs font-extrabold text-slate-600 uppercase block">Juara 2</span>
-                                <span class="text-sm font-extrabold text-slate-900">{{ sortedGroups[1]?.name }}</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-black bg-slate-500 text-white px-3 py-1.5 rounded-full shadow">{{ sortedGroups[1]?.votes }} Suara</span>
-                    </div>
+            <!-- Area Tampilan Hasil di Layar LCD -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">🏆 Papan Panggung LCD</h3>
+                
+                <!-- Status Belum Dibuka -->
+                <div v-if="revealStep === 0" class="text-center py-8 px-4 bg-slate-900/5 rounded-2xl border-2 border-dashed border-slate-300 space-y-2">
+                    <div class="text-3xl">🎭</div>
+                    <h4 class="text-sm font-extrabold text-slate-800">Menunggu Pengumuman Panggung...</h4>
+                    <p class="text-xs text-slate-500">Gunakan tombol kontrol di atas untuk membunyikan efek suara dan membuka juara.</p>
+                </div>
 
-                    <!-- Juara 3 (Medali Perunggu) -->
-                    <div class="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100 border-2 border-orange-300 shadow-md">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-xl bg-orange-600 text-white flex items-center justify-center text-sm font-black shadow">🥉</span>
-                            <div>
-                                <span class="text-xs font-extrabold text-orange-800 uppercase block">Juara 3</span>
-                                <span class="text-sm font-extrabold text-slate-900">{{ sortedGroups[2]?.name }}</span>
-                            </div>
+                <!-- Juara 3 Terbuka -->
+                <div v-if="revealStep >= 1" class="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100 border-2 border-orange-300 shadow-md animate-pop">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-orange-600 text-white flex items-center justify-center text-sm font-black shadow">🥉</span>
+                        <div>
+                            <span class="text-xs font-extrabold text-orange-800 uppercase block">Juara 3</span>
+                            <span class="text-sm font-extrabold text-slate-900">{{ sortedGroups[2]?.name }}</span>
                         </div>
-                        <span class="text-xs font-black bg-orange-600 text-white px-3 py-1.5 rounded-full shadow">{{ sortedGroups[2]?.votes }} Suara</span>
                     </div>
+                    <span class="text-xs font-black bg-orange-600 text-white px-3 py-1.5 rounded-full shadow">{{ sortedGroups[2]?.votes }} Suara</span>
+                </div>
+
+                <!-- Juara 2 Terbuka -->
+                <div v-if="revealStep >= 2" class="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-slate-100 via-gray-100 to-slate-200 border-2 border-slate-300 shadow-md animate-pop">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-slate-400 text-white flex items-center justify-center text-sm font-black shadow">🥈</span>
+                        <div>
+                            <span class="text-xs font-extrabold text-slate-600 uppercase block">Juara 2</span>
+                            <span class="text-sm font-extrabold text-slate-900">{{ sortedGroups[1]?.name }}</span>
+                        </div>
+                    </div>
+                    <span class="text-xs font-black bg-slate-500 text-white px-3 py-1.5 rounded-full shadow">{{ sortedGroups[1]?.votes }} Suara</span>
+                </div>
+
+                <!-- Juara 1 Terbuka (Paling Megah) -->
+                <div v-if="revealStep >= 3" class="flex justify-between items-center p-4 rounded-2xl bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-200 border-2 border-yellow-400 shadow-xl animate-pop transform scale-102">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-sm font-black shadow">🥇</span>
+                        <div>
+                            <span class="text-xs font-extrabold text-amber-800 uppercase block">👑 JUARA 1 UTAMA 👑</span>
+                            <span class="text-base font-black text-slate-900">{{ sortedGroups[0]?.name }}</span>
+                        </div>
+                    </div>
+                    <span class="text-xs font-black bg-amber-500 text-white px-3 py-1.5 rounded-full shadow">{{ sortedGroups[0]?.votes }} Suara</span>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">📊 Rekapitulasi 10 Kelompok</h3>
-                <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">📊 Rekapitulasi Lengkap 10 Kelompok</h3>
+                <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
                     <div v-for="(group, index) in sortedGroups" :key="group.id" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs shadow-sm">
                         <span class="font-bold text-slate-800">#{{ index + 1 }} {{ group.name }}</span>
-                        <span class="font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-200">{{ group.votes }} Suara</span>
+                        <span class="text-xs font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-200">{{ group.votes }} Suara</span>
                     </div>
                 </div>
             </div>
@@ -193,7 +229,7 @@
             </button>
         </div>
 
-        <!-- Footer Admin Trigger, Motto & Copyright (Tanpa Gelar & Tanpa Cite) -->
+        <!-- Footer Admin Trigger, Motto & Copyright -->
         <footer class="text-center pt-2 space-y-3">
             <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-white/80 hover:text-white transition font-bold tracking-wide underline block mx-auto">
                 🔐 Buka Menu Admin & Leaderboard
@@ -204,7 +240,7 @@
                 Berkreasi - Berinovasi - Berprestasi
             </div>
 
-            <!-- Copyright Resmi Tanpa Gelar -->
+            <!-- Copyright Resmi -->
             <div class="text-emerald-300/80 text-[11px] font-medium pt-1">
                 Created by Muhammad Imam Suwiji. Copyright &copy; 2026
             </div>
@@ -225,8 +261,17 @@
                 const showRevoteModal = ref(false);
                 const isAdminLoggedIn = ref(false);
                 const showLoginModal = ref(false);
+                const revealStep = ref(0); // 0: Tertutup, 1: Juara 3, 2: Juara 2, 3: Juara 1
                 const loginError = ref(false);
                 const loginInput = ref({ user: '', pass: '' });
+
+                // Fungsi Memutar Efek Suara Menegangkan (Drumroll / Suara Tegang)
+                const playSound = () => {
+                    // Menggunakan Audio online berlisensi bebas untuk efek suara tegang/drum roll
+                    const audio = new Audio('https://www.myinstants.com/media/sounds/drum-roll-sound-effect.mp3');
+                    audio.volume = 1.0;
+                    audio.play().catch(e => console.log('Audio autoplay blocked or loaded:', e));
+                };
 
                 // 10 Kelompok Bimtek TKA Kelas Sayung
                 const groups = ref([
@@ -243,12 +288,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v9');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v11');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v9');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v11');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -267,8 +312,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v9', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v9', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v11', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v11', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -281,7 +326,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_v9');
+                        localStorage.removeItem('demak_edu_device_voted_v11');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -292,7 +337,7 @@
                     if (loginInput.value.user === 'tkasayung' && loginInput.value.pass === '123456') {
                         isAdminLoggedIn.value = true;
                         showLoginModal.value = false;
-                        loginError.value = false;
+                        loginError.value, (loginError.value = false);
                         loginInput.value = { user: '', pass: '' };
                     } else {
                         loginError.value = true;
@@ -302,9 +347,10 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v9');
-                        localStorage.removeItem('demak_edu_device_voted_v9');
+                        localStorage.removeItem('demak_edu_votes_sayung_v11');
+                        localStorage.removeItem('demak_edu_device_voted_v11');
                         hasVoted.value = false;
+                        revealStep.value = 0;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
                     }
                 };
@@ -330,6 +376,7 @@
                     showRevoteModal,
                     isAdminLoggedIn,
                     showLoginModal,
+                    revealStep,
                     loginError,
                     loginInput,
                     groups,
@@ -340,6 +387,7 @@
                     confirmRevote,
                     handleLogin,
                     resetVotes,
+                    playSound,
                     clearPlaceholder,
                     restorePlaceholder
                 };
