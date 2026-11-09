@@ -135,7 +135,7 @@
             </form>
         </div>
 
-        <!-- Admin Panel (Logged In) dengan Pengumuman Bertahap (3 ➔ 2 ➔ 1) & Efek Suara -->
+        <!-- Admin Panel (Logged In) dengan Pengumuman Bertahap & Rekap Ditutup -->
         <div v-if="isAdminLoggedIn" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-emerald-300 space-y-6">
             <div class="flex justify-between items-center border-b border-slate-200 pb-4">
                 <h2 class="text-base font-extrabold text-emerald-900">👑 Panel Admin & Panggung LCD</h2>
@@ -174,7 +174,7 @@
                 <div v-if="revealStep === 0" class="text-center py-8 px-4 bg-slate-900/5 rounded-2xl border-2 border-dashed border-slate-300 space-y-2">
                     <div class="text-3xl">🎭</div>
                     <h4 class="text-sm font-extrabold text-slate-800">Menunggu Pengumuman Panggung...</h4>
-                    <p class="text-xs text-slate-500">Gunakan tombol kontrol di atas untuk membunyikan efek suara dan membuka juara.</p>
+                    <p class="text-xs text-slate-500">Gunakan tombol kontrol di atas untuk membunyikan efek suara dan membuka juara satu persatu.</p>
                 </div>
 
                 <!-- Juara 3 Terbuka -->
@@ -214,9 +214,10 @@
                 </div>
             </div>
 
-            <div>
+            <!-- Rekapitulasi Lengkap 10 Kelompok (Hanya Terbuka Ketika Juara 1 Telah Dibuka) -->
+            <div v-if="revealStep === 3" class="space-y-2 pt-2 animate-pop">
                 <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">📊 Rekapitulasi Lengkap 10 Kelompok</h3>
-                <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
                     <div v-for="(group, index) in sortedGroups" :key="group.id" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs shadow-sm">
                         <span class="font-bold text-slate-800">#{{ index + 1 }} {{ group.name }}</span>
                         <span class="text-xs font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-200">{{ group.votes }} Suara</span>
@@ -261,16 +262,15 @@
                 const showRevoteModal = ref(false);
                 const isAdminLoggedIn = ref(false);
                 const showLoginModal = ref(false);
-                const revealStep = ref(0); // 0: Tertutup, 1: Juara 3, 2: Juara 2, 3: Juara 1
+                const revealStep = ref(0); // 0: Tertutup, 1: Juara 3, 2: Juara 2, 3: Juara 1 & Rekap Lengkap
                 const loginError = ref(false);
                 const loginInput = ref({ user: '', pass: '' });
 
-                // Fungsi Memutar Efek Suara Menegangkan (Drumroll / Suara Tegang)
+                // Fungsi Memutar Efek Suara dari file drumroll.mp3 lokal
                 const playSound = () => {
-                    // Menggunakan Audio online berlisensi bebas untuk efek suara tegang/drum roll
-                    const audio = new Audio('https://www.myinstants.com/media/sounds/drum-roll-sound-effect.mp3');
+                    const audio = new Audio('drumroll.mp3');
                     audio.volume = 1.0;
-                    audio.play().catch(e => console.log('Audio autoplay blocked or loaded:', e));
+                    audio.play().catch(e => console.log('Audio error:', e));
                 };
 
                 // 10 Kelompok Bimtek TKA Kelas Sayung
@@ -288,12 +288,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v11');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v12');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v11');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v12');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -312,8 +312,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v11', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v11', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v12', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v12', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -326,7 +326,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_v11');
+                        localStorage.removeItem('demak_edu_device_voted_v12');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -337,7 +337,7 @@
                     if (loginInput.value.user === 'tkasayung' && loginInput.value.pass === '123456') {
                         isAdminLoggedIn.value = true;
                         showLoginModal.value = false;
-                        loginError.value, (loginError.value = false);
+                        loginError.value = false;
                         loginInput.value = { user: '', pass: '' };
                     } else {
                         loginError.value = true;
@@ -347,8 +347,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v11');
-                        localStorage.removeItem('demak_edu_device_voted_v11');
+                        localStorage.removeItem('demak_edu_votes_sayung_v12');
+                        localStorage.removeItem('demak_edu_device_voted_v12');
                         hasVoted.value = false;
                         revealStep.value = 0;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
