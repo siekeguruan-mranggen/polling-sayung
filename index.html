@@ -8,9 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%); }
+        /* Background Hijau Futuristik Digital */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(135deg, #065f46 0%, #047857 50%, #064e3b 100%); }
         .bright-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); }
-        .hero-glow { box-shadow: 0 0 50px rgba(255, 255, 255, 0.4); }
+        .hero-glow { box-shadow: 0 0 50px rgba(52, 211, 153, 0.4); }
         .logo-ring { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
     </style>
 </head>
@@ -19,21 +20,21 @@
     <div id="app" class="max-w-md mx-auto w-full space-y-6">
         
         <!-- Header & Logo Cerah -->
-        <header class="text-center py-6 px-5 rounded-3xl bg-white/95 border-2 border-yellow-400 text-slate-900 shadow-2xl relative overflow-hidden hero-glow">
+        <header class="text-center py-6 px-5 rounded-3xl bg-white/95 border-2 border-emerald-400 text-slate-900 shadow-2xl relative overflow-hidden hero-glow">
             <!-- Logo Resmi Kelas Sayung -->
             <div class="relative w-24 h-24 mx-auto mb-3 p-1 rounded-full logo-ring shadow-xl flex items-center justify-center transform hover:scale-105 transition duration-300">
                 <img src="sayung.jpg" alt="Logo Bimtek TKA Sayung" class="w-full h-full object-cover rounded-full border-2 border-white">
             </div>
 
-            <span class="bg-amber-100 text-amber-800 text-[11px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-widest border border-amber-300">Demak Digital Edufair 2026</span>
-            <h1 class="text-xl font-black mt-3 tracking-tight text-blue-900">Kelompok Paling Inovatif</h1>
+            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-widest border border-emerald-300">Demak Digital Edufair 2026</span>
+            <h1 class="text-xl font-black mt-3 tracking-tight text-emerald-950">Kelompok Paling Inovatif</h1>
             <p class="text-xs text-slate-600 mt-1 font-semibold">Bimtek TKA Kelas Sayung • Penilaian Guru Mranggen</p>
         </header>
 
         <!-- Form Voting Modern & Cerah -->
-        <div v-if="!isAdminLoggedIn && !hasVoted" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-yellow-200 space-y-5">
+        <div v-if="!isAdminLoggedIn && !hasVoted" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-emerald-200 space-y-5">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-                <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-amber-500/30">🗳️</div>
+                <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-emerald-600/30">🗳️</div>
                 <div>
                     <h2 class="text-base font-bold text-slate-900">Form Penilaian Resmi</h2>
                     <p class="text-xs text-slate-500">Masukkan nama dan pilih kelompok terbaik</p>
@@ -47,7 +48,7 @@
                         type="text" 
                         v-model="voterName" 
                         required
-                        class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm transition bg-slate-50 font-medium text-slate-900"
+                        class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm transition bg-slate-50 font-medium text-slate-900"
                         :placeholder="defaultPlaceholder"
                         @focus="clearPlaceholder"
                         @blur="restorePlaceholder"
@@ -60,20 +61,20 @@
                         <select 
                             v-model="selectedGroup" 
                             required
-                            class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm transition bg-slate-50 appearance-none text-slate-900 font-bold">
+                            class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm transition bg-slate-50 appearance-none text-slate-900 font-bold">
                             <option :value="null" disabled>-- Pilih Kelompok (1 - 10) --</option>
                             <option v-for="group in groups" :key="group.id" :value="group.id">
                                 {{ group.name }}
                             </option>
                         </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-blue-600 font-bold">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-emerald-600 font-bold">
                             ▼
                         </div>
                     </div>
                 </div>
 
                 <button type="submit" 
-                    class="w-full py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white font-extrabold rounded-2xl shadow-xl shadow-blue-600/40 transition transform active:scale-95 text-sm tracking-wide mt-2">
+                    class="w-full py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold rounded-2xl shadow-xl shadow-emerald-600/40 transition transform active:scale-95 text-sm tracking-wide mt-2">
                     Kirim Pilihan Suara 🚀
                 </button>
             </form>
@@ -89,7 +90,7 @@
         </div>
 
         <!-- Login Modal Admin -->
-        <div v-if="showLoginModal && !isAdminLoggedIn" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-amber-300 space-y-4">
+        <div v-if="showLoginModal && !isAdminLoggedIn" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-emerald-300 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-200 pb-3">
                 <h2 class="text-base font-bold text-slate-900 flex items-center gap-2"><span>🔐</span> Login Admin</h2>
                 <button @click="showLoginModal = false" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-xl font-bold">Tutup</button>
@@ -97,21 +98,21 @@
             <form @submit.prevent="handleLogin" class="space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
-                    <input type="text" v-model="loginInput.user" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <input type="text" v-model="loginInput.user" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
-                    <input type="password" v-model="loginInput.pass" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <input type="password" v-model="loginInput.pass" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none">
                 </div>
                 <p v-if="loginError" class="text-xs text-rose-600 font-bold">Username atau password salah!</p>
-                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition shadow-md">Masuk Panel Admin</button>
+                <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-md">Masuk Panel Admin</button>
             </form>
         </div>
 
         <!-- Admin Panel (Logged In) dengan Medali & Warna Cerah -->
-        <div v-if="isAdminLoggedIn" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-blue-300 space-y-6">
+        <div v-if="isAdminLoggedIn" class="bright-card rounded-3xl p-6 shadow-2xl border-2 border-emerald-300 space-y-6">
             <div class="flex justify-between items-center border-b border-slate-200 pb-4">
-                <h2 class="text-base font-extrabold text-blue-900">👑 Panel Admin & Leaderboard</h2>
+                <h2 class="text-base font-extrabold text-emerald-900">👑 Panel Admin & Leaderboard</h2>
                 <button @click="isAdminLoggedIn = false" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-xl font-bold border border-rose-200">Logout</button>
             </div>
 
@@ -161,7 +162,7 @@
                 <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
                     <div v-for="(group, index) in sortedGroups" :key="group.id" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs shadow-sm">
                         <span class="font-bold text-slate-800">#{{ index + 1 }} {{ group.name }}</span>
-                        <span class="font-extrabold text-blue-700 bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200">{{ group.votes }} Suara</span>
+                        <span class="font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-200">{{ group.votes }} Suara</span>
                     </div>
                 </div>
             </div>
@@ -171,11 +172,21 @@
             </button>
         </div>
 
-        <!-- Footer Admin Trigger -->
-        <footer class="text-center pt-2">
-            <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-white/80 hover:text-white transition font-bold tracking-wide underline">
+        <!-- Footer Admin Trigger, Motto & Copyright -->
+        <footer class="text-center pt-2 space-y-3">
+            <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-white/80 hover:text-white transition font-bold tracking-wide underline block mx-auto">
                 🔐 Buka Menu Admin & Leaderboard
             </button>
+            
+            <!-- Motto Acara -->
+            <div class="text-emerald-200 text-xs font-bold tracking-wider uppercase">
+                Berkreasi - Berinovasi - Berprestasi[cite: 1]
+            </div>
+
+            <!-- Copyright Resmi -->
+            <div class="text-emerald-300/80 text-[11px] font-medium pt-1">
+                Created by Muhammad Imam Suwiji, S.Pd.SD., M.Pd. Copyright &copy; 2026
+            </div>
         </footer>
 
     </div>
@@ -210,12 +221,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v5');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v6');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v5');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v6');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -234,8 +245,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v5', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v5', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v6', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v6', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -254,8 +265,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v5');
-                        localStorage.removeItem('demak_edu_device_voted_v5');
+                        localStorage.removeItem('demak_edu_votes_sayung_v6');
+                        localStorage.removeItem('demak_edu_device_voted_v6');
                         hasVoted.value = false;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
                     }
