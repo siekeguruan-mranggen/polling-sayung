@@ -43,7 +43,7 @@
 
             <form @submit.prevent="submitVote" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Nama Lengkap & Gelar</label>
+                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Nama Lengkap</label>
                     <input 
                         type="text" 
                         v-model="voterName" 
@@ -215,7 +215,7 @@
     <script>
         const { createApp, ref, computed, onMounted } = Vue;
 
-        const defaultPlaceholder = "Contoh: Muhammad Imam Suwiji, S.Pd.SD.,M.Pd.";
+        const defaultPlaceholder = "Contoh: Muhammad Imam Suwiji";
 
         createApp({
             setup() {
@@ -243,12 +243,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v7');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v8');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v7');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v8');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -267,8 +267,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v7', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_v7', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_v8', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_v8', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -281,7 +281,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_v7');
+                        localStorage.removeItem('demak_edu_device_voted_v8');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -302,8 +302,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v7');
-                        localStorage.removeItem('demak_edu_device_voted_v7');
+                        localStorage.removeItem('demak_edu_votes_sayung_v8');
+                        localStorage.removeItem('demak_edu_device_voted_v8');
                         hasVoted.value = false;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
                     }
