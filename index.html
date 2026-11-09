@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #060d1f; background-image: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #0f172a 60%, #060d1f 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(20px); }
+        /* Background Kuning Emas Elegan untuk Card */
+        .gold-card { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%); backdrop-filter: blur(20px); }
         .hero-glow { box-shadow: 0 0 40px rgba(37, 99, 235, 0.3); }
         .logo-ring { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
     </style>
@@ -33,23 +34,23 @@
         </header>
 
         <!-- Form Voting Modern -->
-        <div v-if="!isAdminLoggedIn && !hasVoted" class="glass-card rounded-3xl p-6 shadow-2xl border border-white/20 space-y-5">
-            <div class="flex items-center gap-3 border-b border-slate-200/60 pb-3">
-                <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/30">🗳️</div>
+        <div v-if="!isAdminLoggedIn && !hasVoted" class="gold-card rounded-3xl p-6 shadow-2xl border border-amber-200/60 space-y-5">
+            <div class="flex items-center gap-3 border-b border-amber-300/60 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-amber-600/30">🗳️</div>
                 <div>
-                    <h2 class="text-base font-bold text-slate-900">Form Penilaian Resmi</h2>
-                    <p class="text-xs text-slate-500">Masukkan nama dan pilih kelompok terbaik</p>
+                    <h2 class="text-base font-bold text-amber-950">Form Penilaian Resmi</h2>
+                    <p class="text-xs text-amber-800/80">Masukkan nama dan pilih kelompok terbaik</p>
                 </div>
             </div>
 
             <form @submit.prevent="submitVote" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Nama Lengkap & Gelar</label>
+                    <label class="block text-xs font-extrabold text-amber-900 mb-1.5 uppercase tracking-wider">Nama Lengkap & Gelar</label>
                     <input 
                         type="text" 
                         v-model="voterName" 
                         required
-                        class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm transition bg-slate-50/80 font-medium"
+                        class="w-full px-4 py-3.5 rounded-2xl border border-amber-300 focus:ring-2 focus:ring-amber-600 focus:outline-none text-sm transition bg-white/90 font-medium text-slate-800"
                         :placeholder="defaultPlaceholder"
                         @focus="clearPlaceholder"
                         @blur="restorePlaceholder"
@@ -57,89 +58,86 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Pilih Kelompok Inovatif</label>
+                    <label class="block text-xs font-extrabold text-amber-900 mb-1.5 uppercase tracking-wider">Pilih Kelompok Inovatif</label>
                     <div class="relative">
                         <select 
                             v-model="selectedGroup" 
                             required
-                            class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:outline-none text-sm transition bg-slate-50/80 appearance-none text-slate-800 font-bold">
+                            class="w-full px-4 py-3.5 rounded-2xl border border-amber-300 focus:ring-2 focus:ring-amber-600 focus:outline-none text-sm transition bg-white/90 appearance-none text-slate-900 font-bold">
                             <option :value="null" disabled>-- Pilih Kelompok (1 - 10) --</option>
                             <option v-for="group in groups" :key="group.id" :value="group.id">
                                 {{ group.name }}
                             </option>
                         </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-blue-600 font-bold">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-amber-800 font-bold">
                             ▼
                         </div>
                     </div>
                 </div>
 
                 <button type="submit" 
-                    class="w-full py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white font-extrabold rounded-2xl shadow-xl shadow-blue-600/40 transition transform active:scale-95 text-sm tracking-wide mt-2">
+                    class="w-full py-4 bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-extrabold rounded-2xl shadow-xl shadow-amber-600/30 transition transform active:scale-95 text-sm tracking-wide mt-2">
                     Kirim Pilihan Suara 🚀
                 </button>
             </form>
         </div>
 
-        <!-- Success State -->
-        <div v-if="hasVoted && !isAdminLoggedIn" class="glass-card rounded-3xl p-8 text-center shadow-2xl space-y-4 border border-white/20">
+        <!-- Success State (Sudah Voting) -->
+        <div v-if="hasVoted && !isAdminLoggedIn" class="gold-card rounded-3xl p-8 text-center shadow-2xl space-y-4 border border-amber-200/60">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
                 ✓
             </div>
-            <h2 class="text-xl font-extrabold text-slate-900">Terima Kasih, Penilai!</h2>
-            <p class="text-sm text-slate-600 leading-relaxed">Pilihan Anda untuk Kategori Kelompok Paling Inovatif telah berhasil terekam.</p>
-            <button @click="hasVoted = false; selectedGroup = null;" class="text-xs text-blue-600 font-bold underline hover:text-blue-800 pt-2 block mx-auto">
-                Kirim Penilaian Baru / Ganti Sesi
-            </button>
+            <h2 class="text-xl font-extrabold text-amber-950">Terima Kasih, Guru Hebat!</h2>
+            <p class="text-sm text-amber-900/80 leading-relaxed">Pilihan Anda untuk Kategori Kelompok Paling Inovatif telah berhasil terekam. Perangkat ini telah mencatat suara sah Anda.</p>
         </div>
 
         <!-- Login Modal Admin -->
-        <div v-if="showLoginModal && !isAdminLoggedIn" class="glass-card rounded-3xl p-6 shadow-2xl border border-white/20 space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h2 class="text-base font-bold text-slate-900 flex items-center gap-2"><span>🔐</span> Login Admin</h2>
-                <button @click="showLoginModal = false" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-xl font-bold">Tutup</button>
+        <div v-if="showLoginModal && !isAdminLoggedIn" class="gold-card rounded-3xl p-6 shadow-2xl border border-amber-300 space-y-4">
+            <div class="flex justify-between items-center border-b border-amber-300 pb-3">
+                <h2 class="text-base font-bold text-amber-950 flex items-center gap-2"><span>🔐</span> Login Admin</h2>
+                <button @click="showLoginModal = false" class="text-xs bg-amber-200 hover:bg-amber-300 text-amber-900 px-3 py-1.5 rounded-xl font-bold">Tutup</button>
             </div>
             <form @submit.prevent="handleLogin" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
-                    <input type="text" v-model="loginInput.user" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <label class="block text-xs font-bold text-amber-900 mb-1">Username</label>
+                    <input type="text" v-model="loginInput.user" required class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 text-sm focus:ring-2 focus:ring-amber-600 focus:outline-none bg-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
-                    <input type="password" v-model="loginInput.pass" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <label class="block text-xs font-bold text-amber-900 mb-1">Password</label>
+                    <input type="password" v-model="loginInput.pass" required class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 text-sm focus:ring-2 focus:ring-amber-600 focus:outline-none bg-white">
                 </div>
-                <p v-if="loginError" class="text-xs text-rose-500 font-bold">Username atau password salah!</p>
-                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition shadow-md">Masuk Panel Admin</button>
+                <p v-if="loginError" class="text-xs text-rose-600 font-bold">Username atau password salah!</p>
+                <button type="submit" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs transition shadow-md">Masuk Panel Admin</button>
             </form>
         </div>
 
         <!-- Admin Panel (Logged In) -->
-        <div v-if="isAdminLoggedIn" class="glass-card rounded-3xl p-6 shadow-2xl border border-white/20 space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-4">
-                <h2 class="text-base font-extrabold text-slate-900">👑 Panel Admin & Leaderboard</h2>
+        <div v-if="isAdminLoggedIn" class="gold-card rounded-3xl p-6 shadow-2xl border border-amber-300 space-y-6">
+            <div class="flex justify-between items-center border-b border-amber-300 pb-4">
+                <h2 class="text-base font-extrabold text-amber-950">👑 Panel Admin & Leaderboard</h2>
                 <button @click="isAdminLoggedIn = false" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-xl font-bold border border-rose-200">Logout</button>
             </div>
 
             <div>
-                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3">🏆 Peringkat 3 Besar Teratas</h3>
+                <h3 class="text-xs font-extrabold text-amber-900 uppercase tracking-wider mb-3">🏆 Peringkat 3 Besar Teratas</h3>
                 <div class="space-y-2.5">
                     <div v-for="(group, index) in sortedGroups.slice(0, 3)" :key="group.id" 
-                        class="flex justify-between items-center p-3.5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/60 shadow-sm">
+                        class="flex justify-between items-center p-3.5 rounded-2xl bg-white/80 border border-amber-200 shadow-sm">
                         <div class="flex items-center gap-3">
-                            <span class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-extrabold shadow-md">#{{ index + 1 }}</span>
-                            <span class="text-sm font-bold text-slate-800">{{ group.name }}</span>
+                            <span class="w-7 h-7 rounded-xl bg-amber-600 text-white flex items-center justify-center text-xs font-extrabold shadow-md">#{{ index + 1 }}</span>
+                            <span class="text-sm font-bold text-slate-900">{{ group.name }}</span>
                         </div>
-                        <span class="text-xs font-extrabold bg-blue-600 text-white px-3 py-1 rounded-full shadow-sm">{{ group.votes }} Suara</span>
+                        <span class="text-xs font-extrabold bg-amber-600 text-white px-3 py-1 rounded-full shadow-sm">{{ group.votes }} Suara</span>
                     </div>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">📊 Rekapitulasi 10 Kelompok</h3>
+                <h3 class="text-xs font-extrabold text-amber-900 uppercase tracking-wider mb-2">📊 Rekapitulasi 10 Kelompok</h3>
                 <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
-                    <div v-for="group in sortedGroups" :key="group.id" class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-                        <span class="font-bold text-slate-700">{{ group.name }}</span>
-                        <span class="font-extrabold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">{{ group.votes }} Suara</span>
+                    <div v-for="group in sortedGroups" :key="group.id" class="flex justify-between items-center p-3 rounded-xl bg-white/60 border border-amber-200 text-xs">
+                        <span class="font-bold text-slate-800">{{ group.name }}</span>
+                        <span class="font-extrabold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200">{{ group.votes }} Suara</span>
                     </div>
                 </div>
             </div>
@@ -151,7 +149,7 @@
 
         <!-- Footer Admin Trigger -->
         <footer class="text-center pt-2">
-            <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-slate-400 hover:text-blue-300 transition font-medium tracking-wide">
+            <button @click="showLoginModal = true" v-if="!isAdminLoggedIn && !showLoginModal" class="text-xs text-slate-400 hover:text-amber-300 transition font-medium tracking-wide">
                 🔐 Buka Menu Admin & Leaderboard
             </button>
         </footer>
@@ -188,7 +186,13 @@
                 ]);
 
                 onMounted(() => {
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v3');
+                    // Cek apakah device ini sudah pernah melakukan voting sebelumnya
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_v4');
+                    if (deviceHasVoted === 'true') {
+                        hasVoted.value = true;
+                    }
+
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_v4');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -207,7 +211,10 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_v3', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_votes_sayung_v4', JSON.stringify(groups.value));
+                        
+                        // Kunci device agar tidak bisa voting lagi
+                        localStorage.setItem('demak_edu_device_voted_v4', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -224,10 +231,12 @@
                 };
 
                 const resetVotes = () => {
-                    if (confirm('Yakin ingin mereset seluruh data polling?')) {
+                    if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_v3');
-                        alert('Data berhasil direset.');
+                        localStorage.removeItem('demak_edu_votes_sayung_v4');
+                        localStorage.removeItem('demak_edu_device_voted_v4');
+                        hasVoted.value = false;
+                        alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
                     }
                 };
 
