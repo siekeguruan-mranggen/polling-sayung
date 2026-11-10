@@ -273,27 +273,27 @@
                     audio.play().catch(e => console.log('Audio error:', e));
                 };
 
-                // 10 Kelompok Bimtek TKA Kelas Sayung
+                // 10 Kelompok Bimtek TKA Kelas Sayung (Dimulai dari 0)
                 const groups = ref([
-                    { id: 1, name: 'Kelompok 1', votes: 12 },
-                    { id: 2, name: 'Kelompok 2', votes: 18 },
-                    { id: 3, name: 'Kelompok 3', votes: 9 },
-                    { id: 4, name: 'Kelompok 4', votes: 15 },
-                    { id: 5, name: 'Kelompok 5', votes: 7 },
-                    { id: 6, name: 'Kelompok 6', votes: 14 },
-                    { id: 7, name: 'Kelompok 7', votes: 11 },
-                    { id: 8, name: 'Kelompok 8', votes: 20 },
-                    { id: 9, name: 'Kelompok 9', votes: 8 },
-                    { id: 10, name: 'Kelompok 10', votes: 13 }
+                    { id: 1, name: 'Kelompok 1', votes: 0 },
+                    { id: 2, name: 'Kelompok 2', votes: 0 },
+                    { id: 3, name: 'Kelompok 3', votes: 0 },
+                    { id: 4, name: 'Kelompok 4', votes: 0 },
+                    { id: 5, name: 'Kelompok 5', votes: 0 },
+                    { id: 6, name: 'Kelompok 6', votes: 0 },
+                    { id: 7, name: 'Kelompok 7', votes: 0 },
+                    { id: 8, name: 'Kelompok 8', votes: 0 },
+                    { id: 9, name: 'Kelompok 9', votes: 0 },
+                    { id: 10, name: 'Kelompok 10', votes: 0 }
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_sayung_clean');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_sayung_clean_v2');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_clean');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_clean_v2');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -312,8 +312,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_clean', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_sayung_clean', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_clean_v2', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_sayung_clean_v2', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -326,7 +326,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_sayung_clean');
+                        localStorage.removeItem('demak_edu_device_voted_sayung_clean_v2');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -348,8 +348,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_clean');
-                        localStorage.removeItem('demak_edu_device_voted_sayung_clean');
+                        localStorage.removeItem('demak_edu_votes_sayung_clean_v2');
+                        localStorage.removeItem('demak_edu_device_voted_sayung_clean_v2');
                         hasVoted.value = false;
                         revealStep.value = 0;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
