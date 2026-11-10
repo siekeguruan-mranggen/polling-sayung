@@ -238,7 +238,7 @@
             
             <!-- Motto Acara -->
             <div class="text-emerald-200 text-xs font-bold tracking-wider uppercase">
-                Berkreasi - Berinovasi - Berprestasi[cite: 1]
+                Berkreasi - Berinovasi - Berprestasi
             </div>
 
             <!-- Copyright Resmi -->
@@ -288,12 +288,12 @@
                 ]);
 
                 onMounted(() => {
-                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_sayung_vgreen');
+                    const deviceHasVoted = localStorage.getItem('demak_edu_device_voted_sayung_clean');
                     if (deviceHasVoted === 'true') {
                         hasVoted.value = true;
                     }
 
-                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_vgreen');
+                    const savedVotes = localStorage.getItem('demak_edu_votes_sayung_clean');
                     if (savedVotes) {
                         groups.value = JSON.parse(savedVotes);
                     }
@@ -312,8 +312,8 @@
                     const group = groups.value.find(g => g.id === selectedGroup.value);
                     if (group) {
                         group.votes += 1;
-                        localStorage.setItem('demak_edu_votes_sayung_vgreen', JSON.stringify(groups.value));
-                        localStorage.setItem('demak_edu_device_voted_sayung_vgreen', 'true');
+                        localStorage.setItem('demak_edu_votes_sayung_clean', JSON.stringify(groups.value));
+                        localStorage.setItem('demak_edu_device_voted_sayung_clean', 'true');
                         hasVoted.value = true;
                     }
                 };
@@ -326,7 +326,7 @@
                     if (choice === 'yes') {
                         hasVoted.value = false;
                         selectedGroup.value = null;
-                        localStorage.removeItem('demak_edu_device_voted_sayung_vgreen');
+                        localStorage.removeItem('demak_edu_device_voted_sayung_clean');
                         showRevoteModal.value = false;
                     } else {
                         showRevoteModal.value = false;
@@ -348,8 +348,8 @@
                 const resetVotes = () => {
                     if (confirm('Yakin ingin mereset seluruh data polling dan membuka kunci perangkat?')) {
                         groups.value.forEach(g => g.votes = 0);
-                        localStorage.removeItem('demak_edu_votes_sayung_vgreen');
-                        localStorage.removeItem('demak_edu_device_voted_sayung_vgreen');
+                        localStorage.removeItem('demak_edu_votes_sayung_clean');
+                        localStorage.removeItem('demak_edu_device_voted_sayung_clean');
                         hasVoted.value = false;
                         revealStep.value = 0;
                         alert('Data berhasil direset dan perangkat diizinkan voting kembali.');
